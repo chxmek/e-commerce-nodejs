@@ -8,7 +8,7 @@ function auth(req, res, next) {
     }
     const decoded = jwt.verify(token, "jwtSecret");
     console.log(decoded.user); // decoded.user ==> payload
-    // req.user = decoded.user
+    req.user = decoded.user
     next();
   } catch (err) {
     console.log(err);
