@@ -6,13 +6,19 @@ const {
   editUser,
   deleteUser,
 } = require("../controllers/auth");
+const auth = require("../middleware/auth"); // middleware
+
 const router = express.Router();
 
-router.get("/auth", listUser);
+router.get("/1", auth, (req, res) => {
+  res.send("Welcome");
+});
 
 router.post("/register", register);
 
-router.post("/login", login)
+router.post("/login", login);
+
+router.get("/auth", listUser);
 
 router.put("/auth", editUser);
 

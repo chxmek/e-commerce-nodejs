@@ -46,7 +46,7 @@ async function login(req, res) {
       // check password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).send("Password doesn't match");
+        return res.status(400).send("Password invalid");
       }
 
       // payload
