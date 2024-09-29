@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 app.use(morgan("dev"));
-app.use(bodyParser.json({ limit: "20mb" }));
+// app.use(bodyParser.json({ limit: "20mb" }));
 app.use(express.json());
 app.use(cors());
 
