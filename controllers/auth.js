@@ -43,8 +43,11 @@ async function login(req, res) {
     if (user && user.enabled) {
       // check matched password
       const isMatch = await bcrypt.compare(password, user.password);
-      console.log(isMatch);
-      res.send("Welcome");
+      if (isMatch) {
+        return res.send("Welcome");
+      } else if (!isMatch) {
+        return res.status(400).send("Password doesn't match");
+      }
     } else if (user && !user.enabled) {
       return res.status(400).send("User doesn't enable");
     } else {
