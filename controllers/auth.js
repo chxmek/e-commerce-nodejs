@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const { token } = require("morgan");
 
 async function listUser(req, res) {
   try {
@@ -41,13 +43,25 @@ async function login(req, res) {
     const { username, password } = req.body;
     var user = await User.findOneAndUpdate({ username }, { new: true }); // findOneAndUpdate เพื่อจะได้รู้เวลาที่ user login
     if (user && user.enabled) {
-      // check matched password
+      // check password
       const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch) {
-        return res.send("Welcome");
-      } else if (!isMatch) {
+      if (!isMatch) {
         return res.status(400).send("Password doesn't match");
       }
+
+      // payload
+      const payload = {
+        user: {
+          username: user.username,
+          role: user.role,
+        },
+      };
+
+      // generate jwt (3600 = 1hr.)
+      jwt.sign(payload, "jwtSecret", { expiresIn: 3600 }, (err, token) => {
+        if (err) throw err;
+        res.json({ token, payload });
+      });
     } else if (user && !user.enabled) {
       return res.status(400).send("User doesn't enable");
     } else {
