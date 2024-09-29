@@ -19,19 +19,39 @@ async function register(req, res) {
       return res.status(400).send("User already exists");
     }
     const salt = await bcrypt.genSalt(10);
-    user = new User({
+    newUser = new User({
       username,
       password,
     });
 
     // encrypt
-    user.password = await bcrypt.hash(password, salt);
+    newUser.password = await bcrypt.hash(password, salt);
 
     // save to db
-    await user.save();
-    res.json(user);
+    await newUser.save();
+    res.json(newUser);
   } catch (err) {
     console.log(err);
+    res.status(500).send("Server error.");
+  }
+}
+
+async function login(req, res) {
+  try {
+    const { username, password } = req.body;
+    var user = await User.findOneAndUpdate({ username }, { new: true }); // findOneAndUpdate เพื่อจะได้รู้เวลาที่ user login
+    if (user && user.enabled) {
+      // check matched password
+      const isMatch = await bcrypt.compare(password, user.password);
+      console.log(isMatch);
+      res.send("Welcome");
+    } else if (user && !user.enabled) {
+      return res.status(400).send("User doesn't enable");
+    } else {
+      return res.status(400).send("Username doesn't exits");
+    }
+  } catch (err) {
+    onsole.log(err);
     res.status(500).send("Server error.");
   }
 }
@@ -54,4 +74,4 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { listUser, register, editUser, deleteUser };
+module.exports = { listUser, register, editUser, deleteUser, login };
