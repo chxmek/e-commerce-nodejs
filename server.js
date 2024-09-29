@@ -7,7 +7,7 @@ require("dotenv").config(); // เป็นไฟล์ที่เอาไว�
 const { connectDB } = require("./config/db");
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 
 connectDB();
 
