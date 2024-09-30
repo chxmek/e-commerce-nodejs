@@ -68,7 +68,7 @@ async function login(req, res) {
       return res.status(400).send("Username doesn't exits");
     }
   } catch (err) {
-    onsole.log(err);
+    console.log(err);
     res.status(500).send("Server error.");
   }
 }
