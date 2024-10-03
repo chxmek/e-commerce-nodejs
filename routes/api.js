@@ -5,6 +5,7 @@ const {
   listUser,
   editUser,
   deleteUser,
+  currentUser,
 } = require("../controllers/auth");
 const auth = require("../middleware/auth"); // middleware
 
@@ -17,6 +18,8 @@ router.get("/1", auth, (req, res) => {
 router.post("/register", register);
 
 router.post("/login", login);
+
+router.post("/current-user", auth, currentUser);
 
 router.get("/auth", listUser);
 

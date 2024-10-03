@@ -73,6 +73,18 @@ async function login(req, res) {
   }
 }
 
+async function currentUser(req, res) {
+  try {
+    const user = await User.findOne({ username: req.user.username })
+      .select("-password") // ไม่ให้ password แสดงใน user ที่ส่งมา
+      .exec();
+    res.send(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server error.");
+  }
+}
+
 async function editUser(req, res) {
   try {
     res.send("Hello PUT !!");
@@ -91,4 +103,11 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { listUser, register, editUser, deleteUser, login };
+module.exports = {
+  listUser,
+  register,
+  editUser,
+  deleteUser,
+  login,
+  currentUser,
+};
